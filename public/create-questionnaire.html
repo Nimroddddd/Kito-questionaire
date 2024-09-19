@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Questionnaire - Questionnaire System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <h1 class="text-xl font-bold">Questionnaire System</h1>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <a href="dashboard.html" class="text-gray-600 hover:text-gray-900"
+              >Dashboard</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8- w-full px-4">
+      <h2 class="text-2xl font-bold mb-4">Create Questionnaire</h2>
+      <form id="createQuestionnaireForm">
+        <div class="mb-4">
+          <label
+            for="title"
+            class="block mb-2 text-sm font-medium text-gray-600"
+            >Questionnaire Title</label
+          >
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div id="questions">
+          <!-- Questions will be dynamically added here -->
+        </div>
+        <button
+          type="button"
+          id="addQuestionBtn"
+          class="mt-4 bg-black text-white py-2 px-4 rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+        >
+          Add Question
+        </button>
+        <button
+          type="submit"
+          class="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Create Questionnaire
+        </button>
+      </form>
+    </main>
+
+    <script src="js/create-questionnaire.js"></script>
+  </body>
+</html>

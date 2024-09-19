@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>MY APP</title>
-</head>
-<body>
-  <h1> May Node and Express be with you. </h1>
-  <form action="/example" method="POST">
-    <input type="text" placeholder="example" name="example">
-    <button type="submit">Submit</button>
-  </form>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>MY APP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+      <h1 class="sm:text-3xl text-xl font-bold mb-6 text-center text-gray-800">
+        Welcome to Questionaire Systme
+      </h1>
+      <div class="flex justify-center">
+        <a href="/login.html">
+          <button
+            type="submit"
+            class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Proceed
+          </button>
+        </a>
+      </div>
+    </div>
+  </body>
 </html>
