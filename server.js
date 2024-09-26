@@ -29,8 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //
-const server =
-  "mongodb+srv://Symplyauf:Simplyauf13@nodeexpressproject.k1ejj.mongodb.net/questio?retryWrites=true&w=majority&appName=que";
+const server = "";
 
 app.use(express.static(path.join(__dirname, "public")));
 
