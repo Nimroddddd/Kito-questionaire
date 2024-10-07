@@ -29,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //
-const server = "";
+const server = process.env.MONGO_URI;
 
 app.use(express.static(path.join(__dirname, "public")));
 
