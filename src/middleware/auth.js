@@ -1,5 +1,6 @@
 exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  console.log(req.user, req.isAuthenticated());
+  if (req.user) {
     return next();
   }
   res.status(401).json({ message: "Unauthorized" });

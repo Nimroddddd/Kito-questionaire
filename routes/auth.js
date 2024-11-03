@@ -1,14 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const authController = require("../controllers/authController");
 const passport = require("passport");
-
-router.post("/register", authController.register);
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      return res.status(500).json({ error: "Authentication error" });
+      return res.status(500).json({ error: err.message });
     }
 
     if (!user) {
@@ -19,10 +16,14 @@ router.post("/login", (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) {
-        return res.status(500).json({ error: "Login error" });
+        return res.status(500).json({ error: err.message });
       }
 
-      return res.json({ user });
+      res.json({
+        user,
+        sessionID: req.sessionID,
+        message: "Login successful",
+      });
     });
   })(req, res, next);
 });
@@ -30,9 +31,17 @@ router.post("/login", (req, res, next) => {
 router.post("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
-      return res.status(500).json({ error: "Logout error" });
+      return res.status(500).json({ error: err.message });
     }
     res.json({ message: "Logged out successfully" });
+  });
+});
+
+router.get("/check", (req, res) => {
+  res.json({
+    isAuthenticated: req.isAuthenticated(),
+    user: req.user,
+    sessionID: req.sessionID,
   });
 });
 

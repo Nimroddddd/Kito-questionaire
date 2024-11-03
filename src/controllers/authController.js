@@ -56,7 +56,12 @@ exports.register = async (req, res) => {
 };
 
 exports.login = (req, res) => {
-  res.json({ message: "Login successful", user: req.user });
+  try {
+    res.json({ message: "Login successful", user: req.user });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login failed", error: error.message });
+  }
 };
 
 exports.logout = (req, res) => {
