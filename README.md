@@ -1,85 +1,122 @@
-# Questionnaire System
+# Questionnaire Application
 
-This project is a web-based questionnaire system that allows users to create, manage, and answer questionnaires. It features user authentication, questionnaire creation, and a scoring system.
+A web application that allows users to create, share, and respond to questionnaires. Built with React, Node.js, and MongoDB.
 
-## Setup Instructions
+## Installation and Running the App
 
-1. Clone the repository:
+### Prerequisites
 
-   ```
-   git clone https://github.com/your-username/questionnaire-system.git
-   cd questionnaire-system
-   ```
+- Node.js (v14 or higher)
+- npm (Node Package Manager)
+- MongoDB (local or Atlas connection)
 
-2. Install dependencies:
+### Step 1: Clone the Repository
 
-   ```
-   npm install
-   ```
+```bash
+git clone https://github.com/yourusername/questionnaire-app.git
+cd questionnaire-app
+```
 
-3. Set up MongoDB:
+### Step 2: Backend Setup
 
-   - Create a MongoDB Atlas account or use a local MongoDB instance
-   - Obtain your MongoDB connection URI
+```bash
+# From the root directory
+npm install
 
-4. Configure the application:
+# Start the backend server
+npm run start
+```
 
-   - Open `server.js`
-   - Replace the placeholder MongoDB URI with your actual URI:
-     ```javascript
-     const server = "your_mongodb_uri_here";
-     ```
+The backend server will start on `http://localhost:8000`
 
-5. Start the application:
+### Step 3: Frontend Setup
 
-   ```
-   npm run start
-   ```
+```bash
+# From the root directory, navigate to frontend
+cd frontend
 
-6. Access the application in your web browser at `http://localhost:8000`
+# Install frontend dependencies
+npm install
 
-## Project Overview
+# Start the frontend development server
+npm run dev
+```
 
-The Questionnaire System is designed to facilitate the creation and management of questionnaires. Here's a brief overview of its functionality:
+The frontend will be available on `http://localhost:5173`
 
-1. **User Registration and Authentication**
+### Environment Setup
 
-   - New users can register with their email, password, and additional details
-   - Registered users can log in to access the system
+Create two `.env` files:
 
-2. **Questionnaire Creation**
+1. In root directory (for backend):
 
-   - Authenticated users can create new questionnaires
-   - Each questionnaire can have multiple questions
-   - Questions can have multiple choice answers
-   - Creators can set the correct answer and assign weights to questions
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=8000
+```
 
-3. **Answering Questionnaires**
+2. In frontend directory:
+   cd frontend
 
-   - Users (both registered and guests) can answer published questionnaires
-   - The system presents questions one by one
-   - Users select their answers from the provided options
+```env
+VITE_SERVER_URL=http://localhost:3000
+```
 
-4. **Scoring System**
+### Running the Application
 
-   - After completing a questionnaire, the system calculates the user's score
-   - Scores are based on correct answers and question weights
-   - The final score is displayed to the user in an alert
+You'll need two terminal windows:
 
-5. **Dashboard**
-   - Authenticated users have access to a dashboard
-   - The dashboard displays a list of questionnaires created by the user
-   - Users can view, edit, or delete their questionnaires from the dashboard
+1. **Terminal 1 (Backend)**:
 
-## Usage Flow
+```bash
+# From root directory
+npm run start
+```
 
-1. Register a new account or log in if you already have one
-2. After logging in, you'll be directed to the dashboard
-3. Create a new questionnaire by clicking the "Create Questionnaire" button
-4. Add questions, possible answers, correct answers, and weights to your questionnaire
-5. Save the questionnaire
-6. Share the questionnaire link with others
-7. Users can access the questionnaire link, answer the questions, and receive their score (uncompleted)
+2. **Terminal 2 (Frontend)**:
 
-Enjoy using the Questionnaire System!
-"# Kito-questionaire" 
+```bash
+# From frontend directory
+cd frontend
+npm run dev
+```
+
+The application should now be running and accessible at `http://localhost:5173`
+
+## Features
+
+- User Authentication (Register/Login)
+- Create Custom Questionnaires
+- Share Questionnaires via Link
+- Submit Responses
+- View Results
+
+## Tech Stack
+
+- **Frontend**: React + Vite
+- **Backend**: Node.js + Express
+- **Database**: MongoDB
+- **Authentication**: JWT
+
+## API Endpoints
+
+### Auth Routes
+
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+
+### Questionnaire Routes
+
+- `GET /api/questionnaire/list` - Get all questionnaires
+- `GET /api/questionnaire/:id` - Get specific questionnaire
+- `POST /api/questionnaire/create` - Create new questionnaire
+- `POST /api/questionnaire/:id/submit` - Submit answers
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
