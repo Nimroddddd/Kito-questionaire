@@ -28,16 +28,17 @@ export default function ViewQuestionnaire() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const answers = {};
+    const answers = [];
 
     questionnaire.questions.forEach((_, index) => {
-      answers[`q${index}`] = formData.get(`q${index}`);
+      answers.push(formData.get(`q${index}`));
     });
 
     try {
       const response = await questionnaireAPI.submitAnswers(id, answers);
+      const { score } = await response.json()
       if (response.ok) {
-        alert("Answers submitted successfully");
+        alert(`Answers submitted successfully! your score was: ${score}`);
       } else {
         alert("Failed to submit answers");
       }
@@ -56,6 +57,18 @@ export default function ViewQuestionnaire() {
         <div className="mb-6 text-sm text-gray-600">
           Created by: {questionnaire.creator.firstName}{" "}
           {questionnaire.creator.lastName} ({questionnaire.creator.position})
+        </div>
+        <div className="py-2 px-3 flex flex-col border border-gray-300 rounded-md my-6">
+          <p className="font-bold">Shareable link: </p>
+          <div className="flex flex-wrap">
+            <p className="font-light mr-6">http://localhost:5173/q/{questionnaire.shareableLink}</p>
+            <button onClick={() => {  
+              navigator.clipboard.writeText(`http://localhost:5173/q/${questionnaire.shareableLink}`)
+              // add toast successfully coppied to clipboard here
+              }} className="bg-blue-500 text-white px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              Copy
+            </button>
+          </div>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="space-y-6">

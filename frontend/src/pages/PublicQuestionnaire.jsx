@@ -28,21 +28,23 @@ export default function PublicQuestionnaire() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const answers = {};
+    const answers = [];
 
     questionnaire.questions.forEach((_, index) => {
-      answers[`q${index}`] = formData.get(`q${index}`);
+      answers.push(formData.get(`q${index}`));
     });
 
     try {
       const response = await questionnaireAPI.submitPublic(link, answers);
+      const {score} = await response.json() 
       if (response.ok) {
-        alert("Thank you for submitting your answers!");
+        alert(`Thank you for submitting your answers! your score is: ${score}`);
       } else {
         alert("Failed to submit answers");
       }
     } catch (error) {
       console.error("Error:", error);
+      console.log(error.message, "is the error")
       alert("An error occurred while submitting answers");
     }
   };
