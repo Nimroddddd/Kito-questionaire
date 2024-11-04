@@ -70,7 +70,7 @@ exports.submitQuestionnaire = async (req, res) => {
 
     let score = 0;
     questionnaire.questions.forEach((question, index) => {
-      if (answers[index] === question.correctAnswer) {
+      if (answers[index] == question.correctAnswer) {
         switch (question.weight) {
           case "Low":
             score += 1;
@@ -84,6 +84,17 @@ exports.submitQuestionnaire = async (req, res) => {
         }
       }
     });
+
+    const attempt = {
+      user: req.user ? req.user._id : "anonymous",
+      score: score,
+      answers,
+    };
+
+    questionnaire.attempts.push(attempt);
+    await questionnaire.save();
+
+    
 
     res.json({ message: "Questionnaire submitted successfully", score });
   } catch (error) {

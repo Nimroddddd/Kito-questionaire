@@ -69,6 +69,12 @@ export default function Dashboard() {
                 >
                   View Questionnaire
                 </Link>
+              <button onClick={() => {  
+                navigator.clipboard.writeText(`http://localhost:5173/q/${questionnaire.shareableLink}`)
+                // add toast successfully coppied to clipboard here
+                }} className="bg-blue-500 text-white px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Copy
+              </button>
               </div>
             </div>
           ))}

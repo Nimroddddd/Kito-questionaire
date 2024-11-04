@@ -7,7 +7,7 @@ router.get(
   publicQuestionnaireController.getQuestionnaire
 );
 router.post(
-  "/public:shareableLink/submit",
+  "/public/:shareableLink/submit",
   publicQuestionnaireController.submitQuestionnaire
 );
 

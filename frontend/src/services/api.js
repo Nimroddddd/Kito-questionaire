@@ -55,14 +55,14 @@ export const questionnaireAPI = {
   },
 
   getPublic: async (link) => {
-    const response = await fetch(`${BASE_URL}/api/q/${link}`, {
+    const response = await fetch(`${BASE_URL}/api/q/public/${link}`, {
       credentials: "include",
     });
     return response;
   },
 
   submitPublic: async (link, answers) => {
-    const response = await fetch(`${BASE_URL}/api/q/${link}/submit`, {
+    const response = await fetch(`${BASE_URL}/api/q/public/${link}/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
