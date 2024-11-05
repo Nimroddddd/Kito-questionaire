@@ -19,19 +19,21 @@ app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:5173", "https://kito-questionaire.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "your-secret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: process.env.NODE_ENV === "production" ? ".vercel.app" : undefined,
     },
     proxy: true,
   })
