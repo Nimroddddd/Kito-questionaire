@@ -15,24 +15,12 @@ const initializePassport = require("./src/config/passport");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", [
-    "http://localhost:5173",
-    "https://kito-questionaire.vercel.app",
-  ]);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  console.log("📥 Incoming request:", {
-    method: req.method,
-    path: req.path,
-    body: req.body,
-    headers: req.headers,
-  });
-
-  next();
-});
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:5173", "https://kito-questionaire.vercel.app"],
+  })
+);
 
 app.use(
   session({
