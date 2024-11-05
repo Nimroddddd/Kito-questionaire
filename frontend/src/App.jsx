@@ -8,6 +8,8 @@ import CreateQuestionnaire from "./pages/CreateQuestionnaire";
 import ViewQuestionnaire from "./pages/ViewQuestionnaire";
 import PublicQuestionnaire from "./pages/PublicQuestionnaire";
 import "./index.css";
+import { Toaster } from "./components/ui/toaster";
+import UnauthLayout from "./components/Layout/UnauthLayout";
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
       <div className="font-['Clash_Display']">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route element={<UnauthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route
@@ -27,6 +31,7 @@ function App() {
           </Route>
           <Route path="/q/:link" element={<PublicQuestionnaire />} />
         </Routes>
+        <Toaster />
       </div>
     </BrowserRouter>
   );

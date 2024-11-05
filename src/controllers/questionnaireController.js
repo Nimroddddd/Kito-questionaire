@@ -52,7 +52,18 @@ exports.getQuestionnaire = async (req, res) => {
     if (!questionnaire) {
       return res.status(404).json({ message: "Questionnaire not found" });
     }
-    res.json(questionnaire);
+
+    const isOwner = req.user && questionnaire.creator._id.equals(req.user._id);
+    let attempts = [];
+    if (isOwner) {
+      attempts = await QuestionnaireAttempt.find({
+        questionnaire: questionnaire._id,
+      })
+        .select("score createdAt user")
+        .sort("-createdAt");
+    }
+
+    res.json({ questionnaire, isOwner, attempts });
   } catch (error) {
     res
       .status(400)
@@ -85,16 +96,14 @@ exports.submitQuestionnaire = async (req, res) => {
       }
     });
 
-    const attempt = {
-      user: req.user ? req.user._id : "anonymous",
-      score: score,
+    const attempt = new QuestionnaireAttempt({
+      questionnaire: questionnaire._id,
+      user: req.user?._id,
+      score,
       answers,
-    };
+    });
 
-    questionnaire.attempts.push(attempt);
-    await questionnaire.save();
-
-    
+    await attempt.save();
 
     res.json({ message: "Questionnaire submitted successfully", score });
   } catch (error) {

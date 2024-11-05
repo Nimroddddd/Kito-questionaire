@@ -1,9 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { questionnaireAPI } from "../services/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Trash2, ArrowLeft } from "lucide-react";
 
 export default function CreateQuestionnaire() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([
     {
@@ -24,6 +38,12 @@ export default function CreateQuestionnaire() {
         weight: "Low",
       },
     ]);
+  };
+
+  const handleRemoveQuestion = (indexToRemove) => {
+    if (questions.length > 1) {
+      setQuestions(questions.filter((_, index) => index !== indexToRemove));
+    }
   };
 
   const handleQuestionChange = (index, value) => {
@@ -54,7 +74,11 @@ export default function CreateQuestionnaire() {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("Please enter a title");
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: "Please enter a title",
+      });
       return;
     }
 
@@ -63,7 +87,11 @@ export default function CreateQuestionnaire() {
     );
 
     if (!isValid) {
-      alert("Please fill in all questions and answers");
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: "Please fill in all questions and answers",
+      });
       return;
     }
 
@@ -71,125 +99,163 @@ export default function CreateQuestionnaire() {
       const response = await questionnaireAPI.create({ title, questions });
 
       if (response.ok) {
-        alert("Questionnaire created successfully");
+        toast({
+          title: "Success",
+          description: "Questionnaire created successfully",
+        });
         navigate("/dashboard");
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to create questionnaire");
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.message || "Failed to create questionnaire",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An error occurred. Please try again.",
+      });
     }
   };
 
   return (
-    <div className="antialiased bg-gray-100 min-h-screen">
-      <main className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8 w-full px-4">
-        <h2 className="text-2xl font-bold mb-4">Create Questionnaire</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="title"
-              className="block mb-2 text-sm font-medium text-gray-600"
-            >
-              Questionnaire Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+    <div className="min-h-screen p-8 bg-background">
+      <div className="container max-w-3xl mx-auto">
+        <div className="flex items-center mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Create Questionnaire</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Questionnaire Title</Label>
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter questionnaire title"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {questions.map((question, qIndex) => (
-            <div
-              key={qIndex}
-              className="mb-6 p-4 border border-gray-300 rounded-md"
-            >
-              <h3 className="text-lg font-semibold mb-2">
-                Question {qIndex + 1}
-              </h3>
-              <input
-                type="text"
-                value={question.question}
-                onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                placeholder="Enter your question"
-                className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-              <div className="space-y-2">
-                {question.answers.map((answer, aIndex) => (
-                  <input
-                    key={aIndex}
-                    type="text"
-                    value={answer}
+            <Card key={qIndex}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <CardTitle className="text-lg">Question {qIndex + 1}</CardTitle>
+                {questions.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveQuestion(qIndex)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Question Text</Label>
+                  <Input
+                    value={question.question}
                     onChange={(e) =>
-                      handleAnswerChange(qIndex, aIndex, e.target.value)
+                      handleQuestionChange(qIndex, e.target.value)
                     }
-                    placeholder={`Answer ${aIndex + 1}`}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
+                    placeholder="Enter your question"
                   />
-                ))}
-              </div>
-              <div className="mt-4">
-                <label className="block mb-1 text-sm font-medium text-gray-600">
-                  Correct Answer
-                </label>
-                <select
-                  value={question.correctAnswer}
-                  onChange={(e) =>
-                    handleCorrectAnswerChange(qIndex, e.target.value)
-                  }
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                >
-                  <option value="">Select correct answer</option>
-                  {question.answers.map((answer, idx) => (
-                    <option key={idx} value={idx}>
-                      {answer || `Answer ${idx + 1}`}
-                    </option>
+                </div>
+
+                <div className="space-y-4">
+                  <Label>Answers</Label>
+                  {question.answers.map((answer, aIndex) => (
+                    <Input
+                      key={aIndex}
+                      value={answer}
+                      onChange={(e) =>
+                        handleAnswerChange(qIndex, aIndex, e.target.value)
+                      }
+                      placeholder={`Answer ${aIndex + 1}`}
+                    />
                   ))}
-                </select>
-              </div>
-              <div className="mt-4">
-                <label className="block mb-1 text-sm font-medium text-gray-600">
-                  Weight
-                </label>
-                <select
-                  value={question.weight}
-                  onChange={(e) => handleWeightChange(qIndex, e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
-            </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Correct Answer</Label>
+                    <Select
+                      value={question.correctAnswer}
+                      onValueChange={(value) =>
+                        handleCorrectAnswerChange(qIndex, value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select correct answer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {question.answers.map((answer, idx) => (
+                          <SelectItem key={idx} value={idx.toString()}>
+                            {answer || `Answer ${idx + 1}`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Weight</Label>
+                    <Select
+                      value={question.weight}
+                      onValueChange={(value) =>
+                        handleWeightChange(qIndex, value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select weight" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Low">Low</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="High">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
 
-          <button
+          <Button
             type="button"
             onClick={handleAddQuestion}
             className="mt-4 bg-black text-white py-2 px-4 rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
           >
             Add Question
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="submit"
-            className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="mt-6 w-full bg-black text-white py-2 px-4 rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
           >
             Create Questionnaire
-          </button>
+          </Button>
         </form>
-      </main>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 const Questionnaire = require("../models/Questionnaire");
+const QuestionnaireAttempt = require("../models/QuestionnaireAttempt");
 
 exports.getQuestionnaire = async (req, res) => {
   try {
@@ -47,22 +48,21 @@ exports.submitQuestionnaire = async (req, res) => {
       }
     });
 
-    const attempt = {
-      user: req.user ? req.user._id : "anonymous",
-      score: score,
+    // Create a new QuestionnaireAttempt
+    const attempt = new QuestionnaireAttempt({
+      questionnaire: questionnaire._id,
+      user: req.user?._id, // Optional user ID
+      score,
       answers,
-    };
+    });
 
-    questionnaire.attempts.push(attempt);
-    await questionnaire.save();
+    await attempt.save();
 
     res.json({ message: "Questionnaire submitted successfully", score });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error submitting questionnaire",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error submitting questionnaire",
+      error: error.message,
+    });
   }
 };
