@@ -75,10 +75,9 @@ exports.getQuestionnaire = async (req, res) => {
       attempts = await QuestionnaireAttempt.find({
         questionnaire: questionnaire._id,
       })
-        .select("score createdAt user")
+        .select("score createdAt user answers")
         .sort("-createdAt");
     }
-
     res.json({ questionnaire, isOwner, attempts });
   } catch (error) {
     res
@@ -147,3 +146,7 @@ exports.getQuestionnaireAttempts = async (req, res) => {
     });
   }
 };
+
+exports.getAttempt = async (req, res) => {
+  
+}

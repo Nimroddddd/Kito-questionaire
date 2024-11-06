@@ -80,4 +80,8 @@ export const questionnaireAPI = {
     });
     return response;
   },
+
+  getAttempt: async (id) => {
+    const response = await fetch(`${BASE_URL}/api/questionnaire/attempt/${id}`)
+  }
 };
