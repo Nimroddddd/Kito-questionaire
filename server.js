@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "https://kito-questionaire.vercel.app"],
+    origin: ["http://localhost:5173", "https://kito-questionaire.vercel.app", "https://kito-questionaire-pink.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["set-cookie"],
