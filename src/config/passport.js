@@ -55,7 +55,11 @@ module.exports = function (passport) {
     try {
       console.log("Deserializing user ID:", id);
       const user = await User.findById(id);
-      console.log("Deserialized user:", user?.email);
+      if (!user) {
+        console.log("User not found during deserialization");
+        return done(null, false);
+      }
+      console.log("Deserialized user:", user.email);
       done(null, user);
     } catch (error) {
       console.log("Error deserializing user:", error);

@@ -20,6 +20,8 @@ app.use(
     credentials: true,
     origin: ["http://localhost:5173", "https://kito-questionaire.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["set-cookie"],
   })
 );
 
@@ -29,11 +31,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      domain: "onrender.com",
     },
     proxy: true,
   })
