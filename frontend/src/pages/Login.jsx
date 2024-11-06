@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
+import { ClipLoader } from "react-spinners";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,9 +16,11 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await authAPI.login(formData);
       if (response.ok) {
@@ -40,11 +43,13 @@ export default function Login() {
         title: "Error",
         description: "An error occurred. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div className="bg-gray-100 min-h-screen dark:bg-[#050505] flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <h1 className="text-2xl font-bold text-center">Login</h1>
@@ -75,11 +80,15 @@ export default function Login() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <ClipLoader className="text-black dark:text-white" size={12} />
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-gray-600">
+          <p className="mt-4 text-sm text-center text-gray-600">
             Don't have an account?{" "}
             <Link to="/register" className="text-blue-500 hover:underline">
               Register here

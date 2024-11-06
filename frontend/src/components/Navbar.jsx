@@ -1,4 +1,9 @@
+import { useTheme } from "@/hooks/use-theme";
+import { Moon, Sun } from "lucide-react";
+import { Button } from "./ui/button";
+
 export default function Navbar() {
+  const { theme, toggleTheme } = useTheme();
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.href = "/login";
@@ -18,17 +23,31 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 bg-white shadow-md dark:bg-[#050505] dark:shadow-white/10">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <a href={getHomeLink()} className="sm:text-2xl text-lg font-bold">
+            <div className="flex items-center flex-shrink-0">
+              <a href={getHomeLink()} className="text-lg font-bold sm:text-2xl">
                 Questionnaire System
               </a>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={toggleTheme}
+                className="dark:text-white text-black "
+              >
+                {theme === "light" ? (
+                  <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
+                )}
+              </Button>
+            </div>
             {showLogout() && (
               <button
                 onClick={handleLogout}

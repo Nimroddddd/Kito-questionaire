@@ -23,6 +23,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { ClipLoader } from "react-spinners";
 
 export default function ViewQuestionnaire() {
   const { toast } = useToast();
@@ -34,6 +35,7 @@ export default function ViewQuestionnaire() {
   const [isOwner, setIsOwner] = useState(false);
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
   useEffect(() => {
@@ -53,7 +55,6 @@ export default function ViewQuestionnaire() {
             completedQuestionnaires.includes(data.questionnaire.shareableLink)
           ) {
             setHasCompleted(true);
-            setShowCompletionModal(true);
           }
         } else {
           toast({
@@ -81,6 +82,7 @@ export default function ViewQuestionnaire() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitLoading(true);
     const formData = new FormData(e.target);
     const answers = [];
 
@@ -118,12 +120,14 @@ export default function ViewQuestionnaire() {
         title: "Error",
         description: "An error occurred while submitting answers",
       });
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
-      `http://localhost:5173/q/${questionnaire.shareableLink}`
+      `${window.location.origin}/q/${questionnaire.shareableLink}`
     );
     toast({
       title: "Link copied",
@@ -136,7 +140,7 @@ export default function ViewQuestionnaire() {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">Thank You!</DialogTitle>
-          <DialogDescription className="text-center space-y-2">
+          <DialogDescription className="space-y-2 text-center">
             <p>Your answers have been submitted successfully.</p>
             <p className="text-2xl font-bold text-primary">
               Your Score: {score}%
@@ -175,11 +179,11 @@ export default function ViewQuestionnaire() {
             attempts.map((attempt, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center border-b py-2"
+                className="flex items-center justify-between py-2 border-b"
               >
-                <Link 
+                <Link
                   to={`/questionnaire/${id}/attempts/${attempt._id}`}
-                  className="text-black items-center flex gap-1 hover:underline"
+                  className="flex items-center gap-1 text-black dark:text-white hover:underline"
                 >
                   <span>Attempt {attempts.length - index}</span>
                 </Link>
@@ -194,9 +198,9 @@ export default function ViewQuestionnaire() {
 
   if (loading)
     return (
-      <div className="container mx-auto py-10">
+      <div className="container py-10 mx-auto">
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+          <div className="w-32 h-32 border-b-2 border-gray-900 rounded-full dark:border-white animate-spin" />
         </div>
       </div>
     );
@@ -210,7 +214,7 @@ export default function ViewQuestionnaire() {
             onClick={() => navigate(-1)}
             className="gap-2"
           >
-            <ArrowLeft className="h-4 w-4" /> Back
+            <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </div>
 
@@ -227,11 +231,11 @@ export default function ViewQuestionnaire() {
             <div className="flex items-center space-x-2">
               <Input
                 readOnly
-                value={`http://localhost:5173/q/${questionnaire.shareableLink}`}
+                value={`${window.location.origin}/q/${questionnaire.shareableLink}`}
                 className="font-mono text-sm"
               />
               <Button variant="outline" size="icon" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
+                <Copy className="w-4 h-4" />
               </Button>
             </div>
           </CardContent>
@@ -282,8 +286,12 @@ export default function ViewQuestionnaire() {
               </Card>
             ))}
 
-            <Button type="submit" className="w-full">
-              Submit Answers
+            <Button type="submit" className="w-full" disabled={submitLoading}>
+              {submitLoading ? (
+                <ClipLoader className="text-black dark:text-white" size={12} />
+              ) : (
+                "Submit Answers"
+              )}
             </Button>
           </form>
         )}

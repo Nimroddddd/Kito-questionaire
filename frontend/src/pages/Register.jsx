@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
+import { ClipLoader } from "react-spinners";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -25,9 +26,11 @@ export default function Register() {
     password: "",
     position: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await authAPI.register(formData);
       if (response.ok) {
@@ -51,6 +54,8 @@ export default function Register() {
         title: "Error",
         description: "An error occurred. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +68,7 @@ export default function Register() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div className="bg-gray-100 min-h-screen dark:bg-[#050505] flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <h1 className="text-2xl font-bold text-center">Register</h1>
@@ -136,11 +141,15 @@ export default function Register() {
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit" className="w-full">
-              Register
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <ClipLoader className="text-black dark:text-white" size={12} />
+              ) : (
+                "Register"
+              )}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-gray-600">
+          <p className="mt-4 text-sm text-center text-gray-600">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-500 hover:underline">
               Login here

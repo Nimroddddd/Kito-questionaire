@@ -22,6 +22,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { ClipLoader } from "react-spinners";
 
 export default function PublicQuestionnaire() {
   const { link } = useParams();
@@ -32,6 +33,7 @@ export default function PublicQuestionnaire() {
   const [score, setScore] = useState(null);
   const [hasCompleted, setHasCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     const fetchQuestionnaire = async () => {
@@ -73,6 +75,7 @@ export default function PublicQuestionnaire() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitLoading(true);
     const formData = new FormData(e.target);
     const answers = [];
 
@@ -111,6 +114,8 @@ export default function PublicQuestionnaire() {
         title: "Error",
         description: "An error occurred while submitting answers",
       });
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -119,7 +124,7 @@ export default function PublicQuestionnaire() {
       <DialogContent className="max-w-[90%] mx-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">Thank You!</DialogTitle>
-          <DialogDescription className="text-center space-y-2">
+          <DialogDescription className="space-y-2 text-center">
             <p>Thank you for completing the questionnaire!</p>
             <p className="text-2xl font-bold text-primary">
               Your Score: {score}%
@@ -144,9 +149,9 @@ export default function PublicQuestionnaire() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-10">
+      <div className="container py-10 mx-auto">
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+          <div className="w-32 h-32 border-b-2 border-gray-900 rounded-full animate-spin dark:border-white" />
         </div>
       </div>
     );
@@ -201,8 +206,17 @@ export default function PublicQuestionnaire() {
                 </CardContent>
               </Card>
             ))}
-            <Button type="submit" size="lg" className="w-full">
-              Submit
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={submitLoading}
+            >
+              {submitLoading ? (
+                <ClipLoader className="text-black dark:text-white" size={12} />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         )}

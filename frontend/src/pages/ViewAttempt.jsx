@@ -14,15 +14,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Copy } from "lucide-react";
-
-
+import { toast } from "@/hooks/use-toast";
 
 export default function ViewQuestionnaire() {
-
   const [loading, setLoading] = useState(true);
   const [attempt, setAttempt] = useState(null);
   const [questionnaire, setQuestionnaire] = useState(null);
-  const { questionID, attemptID } = useParams()
+  const { questionID, attemptID } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,19 +30,20 @@ export default function ViewQuestionnaire() {
         if (response.ok) {
           const data = await response.json();
           setQuestionnaire(data.questionnaire);
-          const currentAttempt = data.attempts.filter(attempt => attempt._id == attemptID)
-          setAttempt(currentAttempt[0])
+          const currentAttempt = data.attempts.filter(
+            (attempt) => attempt._id == attemptID
+          );
+          setAttempt(currentAttempt[0]);
         }
       } catch (error) {
-        console.error("Error", error)
+        console.error("Error", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-
-    }
+    };
 
     fetchQuestionnaire();
-  },[questionID])
+  }, [questionID]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
@@ -57,14 +56,14 @@ export default function ViewQuestionnaire() {
   };
 
   if (attempt) {
-    console.log(attempt)
+    console.log(attempt);
   }
 
   if (loading)
     return (
-      <div className="container mx-auto py-10">
+      <div className="container py-10 mx-auto">
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+          <div className="w-32 h-32 border-b-2 border-gray-900 rounded-full dark:border-white animate-spin" />
         </div>
       </div>
     );
@@ -78,7 +77,7 @@ export default function ViewQuestionnaire() {
             onClick={() => navigate(-1)}
             className="gap-2"
           >
-            <ArrowLeft className="h-4 w-4" /> Back
+            <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </div>
 
@@ -99,25 +98,26 @@ export default function ViewQuestionnaire() {
           {questionnaire.questions.map((question, index) => (
             <Card key={index}>
               <CardHeader>
-                <CardTitle className="text-lg">
-                  Question {index + 1}
-                </CardTitle>
+                <CardTitle className="text-lg">Question {index + 1}</CardTitle>
                 <CardDescription>{question.question}</CardDescription>
               </CardHeader>
               <CardContent>
                 <RadioGroup name={`q${index}`} required className="space-y-3">
                   {question.answers.map((answer, answerIndex) => (
                     <div
-                    key={answerIndex}
-                    className={`flex items-center space-x-2 ${
-                      attempt.answers[index] === question.correctAnswer && answerIndex === question.correctAnswer 
-                        ? "text-green-600" // Correct answer color
-                        : attempt.answers[index] === answerIndex
-                        ? "text-red-500" // Incorrect answer color
-                        : ""
+                      key={answerIndex}
+                      className={`flex items-center space-x-2 ${
+                        attempt.answers[index] === question.correctAnswer &&
+                        answerIndex === question.correctAnswer
+                          ? "text-green-600" // Correct answer color
+                          : attempt.answers[index] === answerIndex
+                          ? "text-red-500" // Incorrect answer color
+                          : ""
                       }
-                    ${answerIndex === question.correctAnswer && "text-green-600"}`}
-                  >
+                    ${
+                      answerIndex === question.correctAnswer && "text-green-600"
+                    }`}
+                    >
                       <RadioGroupItem
                         value={answerIndex.toString()}
                         id={`q${index}a${answerIndex}`}
@@ -138,5 +138,5 @@ export default function ViewQuestionnaire() {
         </div>
       </div>
     </div>
-  )
+  );
 }

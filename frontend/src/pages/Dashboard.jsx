@@ -55,7 +55,7 @@ export default function Dashboard() {
   }, [navigate, toast]);
 
   const handleCopy = (link) => {
-    navigator.clipboard.writeText(`http://localhost:5173/q/${link}`);
+    navigator.clipboard.writeText(`${window.location.origin}/q/${link}`);
     toast({
       title: "Link copied",
       description: "Questionnaire link has been copied to clipboard",
@@ -63,10 +63,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="antialiased bg-gray-100 min-h-screen">
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-5 mb-7">
-          <h2 className="text-2xl sm:text-2xl font-bold ">
+    <div className="antialiased bg-gray-100 dark:bg-[#050505] dark:text-white text-black min-h-screen">
+      <main className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-between px-5 sm:flex-row sm:items-center mb-7">
+          <h2 className="text-2xl font-bold sm:text-2xl ">
             Your Questionnaires
           </h2>
           <Link
@@ -77,13 +77,13 @@ export default function Dashboard() {
           </Link>
         </div>
         {loading ? (
-          <div className="container mx-auto py-10">
+          <div className="container py-10 mx-auto">
             <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+              <div className="w-32 h-32 border-b-2 border-gray-900 rounded-full animate-spin dark:border-white" />
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full px-5">
+          <div className="grid w-full grid-cols-1 gap-4 px-5 md:grid-cols-2 lg:grid-cols-3">
             {questionnaires.map((questionnaire) => (
               <Card key={questionnaire._id}>
                 <CardHeader>
@@ -105,7 +105,7 @@ export default function Dashboard() {
                 <CardFooter className="flex justify-between">
                   <Link
                     to={`/questionnaire/${questionnaire._id}`}
-                    className="text-black items-center flex gap-1 hover:underline"
+                    className="flex items-center gap-1 text-black dark:text-white hover:underline"
                   >
                     View Questionnaire
                     <ArrowUpRight className="w-4 h-4" />

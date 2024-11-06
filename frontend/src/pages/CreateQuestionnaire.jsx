@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, ArrowLeft } from "lucide-react";
+import { ClipLoader } from "react-spinners";
 
 export default function CreateQuestionnaire() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export default function CreateQuestionnaire() {
       weight: "Low",
     },
   ]);
+  const [loading, setLoading] = useState(false);
 
   const handleAddQuestion = () => {
     setQuestions([
@@ -72,6 +74,7 @@ export default function CreateQuestionnaire() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!title.trim()) {
       toast({
@@ -119,6 +122,8 @@ export default function CreateQuestionnaire() {
         title: "Error",
         description: "An error occurred. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,7 +136,7 @@ export default function CreateQuestionnaire() {
             onClick={() => navigate(-1)}
             className="gap-2"
           >
-            <ArrowLeft className="h-4 w-4" /> Back
+            <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </div>
 
@@ -165,7 +170,7 @@ export default function CreateQuestionnaire() {
                     size="icon"
                     onClick={() => handleRemoveQuestion(qIndex)}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 )}
               </CardHeader>
@@ -243,16 +248,21 @@ export default function CreateQuestionnaire() {
           <Button
             type="button"
             onClick={handleAddQuestion}
-            className="mt-4 bg-black text-white py-2 px-4 rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            className="px-4 py-2 mt-4 text-white bg-black rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
           >
             Add Question
           </Button>
 
           <Button
             type="submit"
-            className="mt-6 w-full bg-black text-white py-2 px-4 rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            className="w-full px-4 py-2 mt-6 text-white bg-black rounded-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            disabled={loading}
           >
-            Create Questionnaire
+            {loading ? (
+              <ClipLoader className="text-black dark:text-white" size={12} />
+            ) : (
+              "Create Questionnaire"
+            )}
           </Button>
         </form>
       </div>
