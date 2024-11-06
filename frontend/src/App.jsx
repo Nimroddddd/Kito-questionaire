@@ -10,6 +10,7 @@ import PublicQuestionnaire from "./pages/PublicQuestionnaire";
 import "./index.css";
 import { Toaster } from "./components/ui/toaster";
 import UnauthLayout from "./components/Layout/UnauthLayout";
+import ViewAttempt from "./pages/ViewAttempt";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               element={<CreateQuestionnaire />}
             />
             <Route path="/questionnaire/:id" element={<ViewQuestionnaire />} />
+            <Route path="/questionnaire/:questionID/attempts/:attemptID" element={<ViewAttempt />} />
           </Route>
           <Route path="/q/:link" element={<PublicQuestionnaire />} />
         </Routes>

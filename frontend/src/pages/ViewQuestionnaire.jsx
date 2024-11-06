@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { questionnaireAPI } from "../services/api";
 import {
   Card,
@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -178,7 +177,12 @@ export default function ViewQuestionnaire() {
                 key={index}
                 className="flex justify-between items-center border-b py-2"
               >
-                <span>Attempt {attempts.length - index}</span>
+                <Link 
+                  to={`/questionnaire/${id}/attempts/${attempt._id}`}
+                  className="text-black items-center flex gap-1 hover:underline"
+                >
+                  <span>Attempt {attempts.length - index}</span>
+                </Link>
                 <span className="font-bold">{attempt.score}%</span>
               </div>
             ))
