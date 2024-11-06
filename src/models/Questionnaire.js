@@ -23,6 +23,7 @@ const QuestionnaireSchema = new mongoose.Schema({
       weight: { type: String, enum: ["Low", "Medium", "High"], required: true },
     },
   ],
+  totalWeight: { type: Number, required: true },
   shareableLink: { type: String, unique: true, default: shortid.generate },
   attempts: [AttemptSchema],
   createdAt: { type: Date, default: Date.now },
