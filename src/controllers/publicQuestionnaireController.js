@@ -47,7 +47,8 @@ exports.submitQuestionnaire = async (req, res) => {
         }
       }
     });
-
+    const { totalWeight } = questionnaire
+    score = Math.round(score / totalWeight * 100)
     // Create a new QuestionnaireAttempt
     const attempt = new QuestionnaireAttempt({
       questionnaire: questionnaire._id,

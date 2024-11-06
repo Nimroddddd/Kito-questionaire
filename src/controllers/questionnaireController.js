@@ -4,10 +4,26 @@ const QuestionnaireAttempt = require("../models/QuestionnaireAttempt");
 exports.createQuestionnaire = async (req, res) => {
   try {
     const { title, questions } = req.body;
+    let totalWeight = 0
+    questions.forEach((question, index) => {
+      switch (question.weight) {
+        case "Low":
+          totalWeight += 1
+          break;
+        case "Medium":
+          totalWeight += 2
+          break;
+        case "High":
+          totalWeight += 3
+          break;
+      }
+    })
+
     const questionnaire = new Questionnaire({
       title,
       creator: req.user._id,
       questions,
+      totalWeight,
     });
     await questionnaire.save();
     res.status(201).json({
@@ -95,7 +111,8 @@ exports.submitQuestionnaire = async (req, res) => {
         }
       }
     });
-
+    const { totalWeight } = questionnaire
+    score = Math.round(score / totalWeight * 100)
     const attempt = new QuestionnaireAttempt({
       questionnaire: questionnaire._id,
       user: req.user?._id,
